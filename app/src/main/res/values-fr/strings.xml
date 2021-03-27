@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SQLiteEdit</string>
+    <string name="root_request_message">SQLiteEdit a besoin des droits administrateurs pour fonctionner correctement. Si vous refusez, vous ne pourrez pas accèder aux données de vos applications.</string>
+    <string name="menu_favDb">Base de données favorites</string>
+</resources>

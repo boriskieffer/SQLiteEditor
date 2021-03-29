@@ -1,5 +1,5 @@
 # SQLiteEditor
-Android app to view/edit databases from your apps.
+Android app to view/edit SQLite databases from your apps.
 
 **Current version : prototype**
 

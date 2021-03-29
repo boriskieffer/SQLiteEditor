@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ public class AppsFragment extends Fragment {
         PackageManager pm = getActivity().getPackageManager();
         List<AppList> apps = new ArrayList<AppList>();
         List<PackageInfo> packs = getActivity().getPackageManager().getInstalledPackages(0);
-        //List<PackageInfo> packs = getPackageManager().getInstalledPackages(PackageManager.GET_PERMISSIONS);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo p = packs.get(i);
             if ((!isSystemPackage(p))) {
@@ -98,26 +98,25 @@ public class AppsFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder listViewHolder;
-            if(convertView == null){
-                listViewHolder = new ViewHolder();
-                convertView = layoutInflater.inflate(R.layout.item, parent, false);
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), app_db.class);
-                        intent.putExtra("pkgName", listStorage.get(position).getName());
-                        startActivity(intent);
+            listViewHolder = new ViewHolder();
+            convertView = layoutInflater.inflate(R.layout.item, parent, false);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), app_db.class);
+                    Log.d("pos", "selecting pos " + String.valueOf(position));
+                    intent.putExtra("pkg", listStorage.get(position).getPackages());
+                    intent.putExtra("pkgName", listStorage.get(position).getName());
+                    startActivity(intent);
 
-                    }
-                });
+                }
+            });
 
-                listViewHolder.textInListView = (TextView)convertView.findViewById(R.id.app_name);
-                listViewHolder.imageInListView = (ImageView)convertView.findViewById(R.id.app_icon);
-                listViewHolder.packageInListView=(TextView)convertView.findViewById(R.id.app_package);
-                convertView.setTag(listViewHolder);
-            }else{
-                listViewHolder = (ViewHolder)convertView.getTag();
-            }
+            listViewHolder.textInListView = (TextView)convertView.findViewById(R.id.app_name);
+            listViewHolder.imageInListView = (ImageView)convertView.findViewById(R.id.app_icon);
+            listViewHolder.packageInListView=(TextView)convertView.findViewById(R.id.app_package);
+            convertView.setTag(listViewHolder);
+
             listViewHolder.textInListView.setText(listStorage.get(position).getName());
             listViewHolder.imageInListView.setImageDrawable(listStorage.get(position).getIcon());
             listViewHolder.packageInListView.setText(listStorage.get(position).getPackages());

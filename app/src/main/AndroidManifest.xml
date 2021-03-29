@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bki.sqliteedit">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,9 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SQLiteEdit">
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity android:name=".TablesListActivity" />
+        <activity
+            android:name=".EditorActivity"
+            android:label="@string/title_activity_editor"
+            android:theme="@style/Theme.SQLiteEdit.NoActionBar" />
+        <activity
             android:name=".ui.apps.app_db"
             android:label=""
-            android:theme="@style/Theme.SQLiteEdit.NoActionBar"></activity>
+            android:theme="@style/Theme.SQLiteEdit.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

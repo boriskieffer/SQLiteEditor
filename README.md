@@ -11,3 +11,4 @@ TODO :
 * Cleanup the code (important)
 * Better project structure
 * Better analysis of SQLite databases. Actual one is slow and does not always work!
+* NDK : Create a library for SQLite

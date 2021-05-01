@@ -3,6 +3,11 @@
     package="com.bki.sqliteedit">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"

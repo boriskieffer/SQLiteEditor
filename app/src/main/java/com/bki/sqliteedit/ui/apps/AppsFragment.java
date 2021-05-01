@@ -30,12 +30,10 @@ public class AppsFragment extends Fragment {
     private AppAdapter installedAppAdapter;
     ListView userInstalledApps;
 
-    private AppsViewModel homeViewModel;
+    private AppsViewModel appsViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(AppsViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        appsViewModel = new ViewModelProvider(this).get(AppsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_apps, container, false);
 
         userInstalledApps = (ListView) root.findViewById(R.id.test);
@@ -46,20 +44,31 @@ public class AppsFragment extends Fragment {
 
 
 
-                return root;
+        return root;
     }
 
     private List<AppList> getInstalledApps() {
         PackageManager pm = getActivity().getPackageManager();
-        List<AppList> apps = new ArrayList<AppList>();
-        List<PackageInfo> packs = getActivity().getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packs.size(); i++) {
-            PackageInfo p = packs.get(i);
-            if ((!isSystemPackage(p))) {
-                String appName = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
-                Drawable icon = p.applicationInfo.loadIcon(getActivity().getPackageManager());
-                String packages = p.applicationInfo.packageName;
-                apps.add(new AppList(appName, icon, packages));
+
+        final List<AppList> apps = new ArrayList<AppList>();
+        final List <ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        for (ApplicationInfo packageInfo : packages) {
+            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+
+                String appName = (String) pm.getApplicationLabel(packageInfo);
+                Drawable icon = packageInfo.loadIcon(getActivity().getPackageManager());
+                String packageName = packageInfo.packageName;
+                String packageVer = "";
+                try {
+                     packageVer = getActivity().getPackageManager().getPackageInfo(packageName, 0).versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    packageVer = "???";
+                    e.printStackTrace();
+
+                }
+
+                apps.add(new AppList(appName, icon, packageName, packageVer));
             }
         }
         return apps;
@@ -115,11 +124,14 @@ public class AppsFragment extends Fragment {
             listViewHolder.textInListView = (TextView)convertView.findViewById(R.id.app_name);
             listViewHolder.imageInListView = (ImageView)convertView.findViewById(R.id.app_icon);
             listViewHolder.packageInListView=(TextView)convertView.findViewById(R.id.app_package);
+            listViewHolder.verInListView=(TextView)convertView.findViewById(R.id.app_pkgver);
             convertView.setTag(listViewHolder);
 
             listViewHolder.textInListView.setText(listStorage.get(position).getName());
             listViewHolder.imageInListView.setImageDrawable(listStorage.get(position).getIcon());
             listViewHolder.packageInListView.setText(listStorage.get(position).getPackages());
+            listViewHolder.verInListView.setText(listStorage.get(position).getVersion());
+
 
             return convertView;
         }
@@ -128,22 +140,30 @@ public class AppsFragment extends Fragment {
             TextView textInListView;
             ImageView imageInListView;
             TextView packageInListView;
+            TextView verInListView;
         }
         }
     }
 
     class AppList{
         private String name;
-        Drawable icon;
+        private Drawable icon;
         private String packages;
-        public AppList(String name,Drawable icon, String packages){
+        private String packageVer;
+
+        public AppList(String name,Drawable icon, String packages, String packageVer){
             this.name = name;
             this.icon=icon;
             this.packages = packages;
+            this.packageVer = packageVer;
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getVersion() {
+            return packageVer;
         }
 
         public Drawable getIcon() {
